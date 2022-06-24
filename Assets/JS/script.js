@@ -11,13 +11,19 @@ const qTag = `&q=`;
 // Html element variables
 const navBar = $("nav")
 const searchBtn = $("#searchBtn")
-const result= $("#result")
+const result = $("#resultContainer")
 const searchInputEl = $("#searchInput")
+const currentSearch = $("#currentSearch")
+// navBar.append("<ul>Previous Searches</ul");
+function search() {
+    let city = searchInputEl.val()
+    if (city !== "") {
+        navBar.addClass("col-3").removeClass("col-12")
+        result.removeClass("d-none")
+        console.log(city);
+        currentSearch.text(city)
+        searchInputEl.val("")
+    }
+}
 
-
-searchBtn.on("click", function () {
-    navBar.addClass("col-3").removeClass("col-12")
-    result.removeClass("d-none")
-    navBar.append("<ul>Previous Searches</ul");
-    console.log(searchInputEl.val());
-})
+searchBtn.on("click", search) 
