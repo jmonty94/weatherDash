@@ -31,10 +31,14 @@
                 </button>
             </div>
         </nav>
-        <section class="border border-black col-9 d-none justify-content-center" id="result">
-            <h2 class="text-center">placeHolder</h2>
+        <section class="border border-black col-9 d-none justify-content-center" id="resultContainer">
+            <h2 id="currentSearch" class="fw-bold text-dark"></h2>
+            <h3 id="currTemp"></h3>
+            <h3 id="currWind"></h3>
+            <h3 id="currHumidity"></h3>
+            <h3 id="currUVIndex"><span id="uvVal"></span></h3>
         </section>
-        <content>
+        <content id="forecastContainer">
 
         </content>
     </main>
@@ -44,4 +48,5 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="Assets/JS/script.js"></script>
+
 </html>
