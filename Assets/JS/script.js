@@ -27,12 +27,10 @@ function search() {
         navBar.addClass("col-3").removeClass("col-12")
         result.removeClass("d-none")
         console.log(city);
-        currentSearch.text(city)
         getLatLon(city)
         
     }
 }
-
 function getLatLon(city) {
     let lat;
     let lon;
@@ -45,12 +43,13 @@ function getLatLon(city) {
         console.log(data);
         lat = data[0].lat
         lon = data[0].lon
+        city = data[0].name
+        state = data[0].state
         console.log(lat , lon);
-        getCityWeather(lat, lon, data[0].name, data[0].state)
+        getCityWeather(lat, lon, city, state)
     })
 }
-
-function getCityWeather(lat, lon){
+function getCityWeather(lat, lon, city, state){
     console.log(lat, lon);
     console.log(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag);
     fetch(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag)
@@ -58,13 +57,21 @@ function getCityWeather(lat, lon){
         return response.json();
     })
     .then(function(data){
+        console.log(city);
+        console.log(state);
         console.log(data);
         currentTemp = data.current.temp
         console.log(currentTemp);
         currentWind = data.current.wind_speed
         console.log(currentWind);
-
+        currentHumidity = data.current.humidity
+        console.log(currentHumidity);
+        currentUVI = data.current.uvi
+        console.log(currentUVI);
+        generateCurrentWeather()
     })
 }
-
+function generateCurrentWeather(params) {
+    
+}
 searchBtn.on("click", search) 
