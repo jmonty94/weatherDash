@@ -10,68 +10,74 @@ const unitTag = `&units=imperial`;
 
 const qTag = `?q=`;
 
-let exclude = `minutely,hourly,alerts`
+let exclude = `minutely,hourly,alerts`;
 
 // Html element variables
-const navBar = $("nav")
-const searchBtn = $("#searchBtn")
-const result = $("#resultContainer")
-const searchInputEl = $("#searchInput")
-const currentSearch = $("#currentSearch")
+const navBarEl = $("nav");
+const searchBtn = $("#searchBtn");
+const resultEl = $("#resultContainer");
+const searchInputEl = $("#searchInput");
+const currentSearchEl = $("#currentSearch");
+const currTempEl = $("#currTemp");
+const currWindEl = $("#currWind");
+const currHumidityEl = $("#currHumidity");
+const currUVIndexEl = $("#currUVIndex");
+const uvValEl = $("#uvVal")
+const forecastContainerEl = $("#forecastContainer")
 // navBar.append("<ul>Previous Searches</ul");
 
 function search() {
-    let city = searchInputEl.val()
-    searchInputEl.val("")
+    let city = searchInputEl.val();
+    searchInputEl.val("");
     if (city !== "") {
-        navBar.addClass("col-3").removeClass("col-12")
-        result.removeClass("d-none")
-        console.log(city);
-        getLatLon(city)
-        
-    }
-}
+        navBarEl.addClass("col-3").removeClass("col-12");
+        resultEl.removeClass("d-none");
+        getLatLon(city);
+    };
+};
 function getLatLon(city) {
     let lat;
     let lon;
-    console.log(city);
     fetch(geocodingURL + qTag + city + openWeatherAPIKey)
     .then(function (response) {
         return response.json();
     })
     .then(function (data) {
-        console.log(data);
-        lat = data[0].lat
-        lon = data[0].lon
-        city = data[0].name
-        state = data[0].state
-        console.log(lat , lon);
-        getCityWeather(lat, lon, city, state)
-    })
-}
+        lat = data[0].lat;
+        lon = data[0].lon;
+        city = data[0].name;
+        state = data[0].state;
+        getCityWeather(lat, lon, city, state);
+    });
+};
 function getCityWeather(lat, lon, city, state){
-    console.log(lat, lon);
-    console.log(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag);
     fetch(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag)
     .then(function(response){
         return response.json();
     })
     .then(function(data){
-        console.log(city);
-        console.log(state);
-        console.log(data);
-        currentTemp = data.current.temp
-        console.log(currentTemp);
-        currentWind = data.current.wind_speed
-        console.log(currentWind);
-        currentHumidity = data.current.humidity
-        console.log(currentHumidity);
-        currentUVI = data.current.uvi
-        console.log(currentUVI);
-        generateCurrentWeather()
-    })
-}
-function generateCurrentWeather(params) {
-    
+        currentTemp = data.current.temp;
+        currentWind = data.current.wind_speed;
+        currentHumidity = data.current.humidity;
+        currentUVI = data.current.uvi;
+        generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
+    });
+};
+function generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI) {
+    console.log(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
+    currentSearchEl.text(city + ", " + state);
+    currTempEl.text("Temp: " + currentTemp);
+    currWindEl.text("Wind: " + currentWind);
+    currHumidityEl.text("Humidity: " + currentHumidity);
+    uvValEl.before("UV Index: ")
+    uvValEl.text(currentUVI)
+    if (currentUVI <= 2) {
+        uvValEl.addClass("bg-success")
+    } else if (currentUVI > 2 && currentUVI <= 7){
+        uvValEl.addClass("bg-warning")
+    } else if (currentUVI > 7){
+        uvValEl.addClass("bg-danger")
+    }
+
 }
 searchBtn.on("click", search) 

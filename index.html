@@ -23,7 +23,7 @@
             <h2 class="text-center">Search for a City</h2>
             <div class="input-group">
                 <div class="col form-outline">
-                    <input id="searchInput" type="search" class="form-control"/>
+                    <input id="searchInput" type="search" class="form-control" />
                     <label class="form-label" for="form1">Search</label>
                 </div>
                 <button id="searchBtn" type="button" class="btn btn-primary col-12">
@@ -32,9 +32,13 @@
             </div>
         </nav>
         <section class="border border-black col-9 d-none justify-content-center" id="resultContainer">
-            <h2 id="currentSearch"></h2>
+            <h2 id="currentSearch" class="fw-bold text-dark"></h2>
+            <h3 id="currTemp"></h3>
+            <h3 id="currWind"></h3>
+            <h3 id="currHumidity"></h3>
+            <h3 id="currUVIndex"><span id="uvVal"></span></h3>
         </section>
-        <content>
+        <content id="forecastContainer">
 
         </content>
     </main>
@@ -44,4 +48,5 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="Assets/JS/script.js"></script>
+
 </html>
