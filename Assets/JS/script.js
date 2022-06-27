@@ -56,11 +56,16 @@ function getCityWeather(lat, lon, city, state){
         return response.json();
     })
     .then(function(data){
+        console.log(data);
+        fiveDay = data.daily.slice(1, 6)
+        console.log(fiveDay);
+        // console.log(forecastArray);
         currentTemp = data.current.temp;
         currentWind = data.current.wind_speed;
         currentHumidity = data.current.humidity;
         currentUVI = data.current.uvi;
         generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
+        generateForecastCards(fiveDay)
     });
 };
 function generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI) {
@@ -78,6 +83,8 @@ function generateCurrentWeather(city, state, currentTemp, currentWind, currentHu
     } else if (currentUVI > 7){
         uvValEl.addClass("bg-danger")
     }
-
+}
+function generateForecastCards(fiveDay){
+    console.log(typeof fiveDay);
 }
 searchBtn.on("click", search) 
