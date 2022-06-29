@@ -16,14 +16,17 @@ let exclude = `minutely,hourly,alerts`;
 const navBarEl = $("nav");
 const searchBtn = $("#searchBtn");
 const resultEl = $("#resultContainer");
-const searchInputEl = $("#searchInput");
+const searchInputEl = $("#citySearch");
 const currentSearchEl = $("#currentSearch");
 const currTempEl = $("#currTemp");
 const currWindEl = $("#currWind");
 const currHumidityEl = $("#currHumidity");
 const currUVIndexEl = $("#currUVIndex");
 const uvValEl = $("#uvVal")
+// const forecastContainerEl = document.getElementById("forecastContainer")
 const forecastContainerEl = $("#forecastContainer")
+
+// const fiveDayEl = document.getElementById("fiveDay")
 // navBar.append("<ul>Previous Searches</ul");
 
 function search() {
@@ -59,13 +62,17 @@ function getCityWeather(lat, lon, city, state){
         console.log(data);
         fiveDay = data.daily.slice(1, 6)
         console.log(fiveDay);
+
         // console.log(forecastArray);
         currentTemp = data.current.temp;
         currentWind = data.current.wind_speed;
         currentHumidity = data.current.humidity;
         currentUVI = data.current.uvi;
         generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
-        generateForecastCards(fiveDay)
+        fiveDay.forEach(day =>  {
+            generateForecastCard(day)
+        })
+        // generateForecastCards(fiveDay)
     });
 };
 function generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI) {
@@ -84,7 +91,19 @@ function generateCurrentWeather(city, state, currentTemp, currentWind, currentHu
         uvValEl.addClass("bg-danger")
     }
 }
-function generateForecastCards(fiveDay){
-    console.log(typeof fiveDay);
+function generateForecastCard(day){
+    // console.log(typeof fiveDay);
+    // const cardEL = document.createElement("div")
+    const cardEL = document.createElement("div")
+    const cardHeadingEl = document.createElement("h1")
+    cardEL.classList.add("card")
+    forecastContainerEl.appendChild(cardEL)
+    cardEL.appendChild(cardHeadingEl)
+    formattedDate = day.dt
+    // cardHeadingEl.textContent = 
+    
+
 }
+
+
 searchBtn.on("click", search) 
