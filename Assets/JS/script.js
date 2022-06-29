@@ -4,13 +4,11 @@ const geocodingURL = 'http://api.openweathermap.org/geo/1.0/direct';
 const openWeatherAPIKey = `&appid=61eaae33c7b186d0a805e57d11aff3bb`;
 const iconUrl = `http://openweathermap.org/img/wn/`;
 const iconEnding = `@2x.png`;
-// const openWeatherAPIKey = `&appid=f606e9f4074125fb3ea381f91319ce19`;
 const latTag = `?lat=`;
 const lonTag = `&lon=`;
 const excludeTag = `&exclude=`;
 const unitTag = `&units=imperial`;
 const qTag = `?q=`;
-let exclude = `minutely,hourly,alerts`;
 
 // Html element variables
 const navBarEl = $("nav");
@@ -31,6 +29,7 @@ function search() {
     if (city !== "") {
         resultEl.removeClass("d-none");
         getLatLon(city);
+        
     };
 };
 function getLatLon(city) {
@@ -59,19 +58,19 @@ function getCityWeather(lat, lon, city, state) {
             console.log(fiveDay);
 
             // console.log(forecastArray);
+            currentDay = moment.unix(data.current.dt).format("MM-DD-YYYY");
             currentTemp = data.current.temp;
             currentWind = data.current.wind_speed;
             currentHumidity = data.current.humidity;
             currentUVI = data.current.uvi;
-            generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
+            generateCurrentWeather(city, state, currentDay, currentTemp, currentWind, currentHumidity, currentUVI);
             fiveDay.forEach(day => {
                 generateForecastCard(day);
             });
         });
 };
-function generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI) {
-    console.log(city, state, currentTemp, currentWind, currentHumidity, currentUVI);
-    currentSearchEl.text(city + ", " + state);
+function generateCurrentWeather(city, state, currentDay, currentTemp, currentWind, currentHumidity, currentUVI) {
+    currentSearchEl.text(city + ", " + state + " " + currentDay );
     currTempEl.text("Temp: " + currentTemp);
     currWindEl.text("Wind: " + currentWind);
     currHumidityEl.text("Humidity: " + currentHumidity);
@@ -92,21 +91,35 @@ function generateForecastCard(day) {
     const cardBodyEl = document.createElement("div");
     const cardTitleContainer = document.createElement("div")
     const cardTitleEl = document.createElement("h4");
-    const cardTextEl = document.createElement("p");
+    const cardTempEl = document.createElement("p");
+    const cardWindEl = document.createElement("p");
+    const cardHumidityEl = document.createElement("p");
     const cardIcon = document.createElement("img");
     const formattedDate = moment.unix(day.dt).format("MM-DD-YYYY");
     cardIcon.src = (iconUrl + day.weather[0].icon + iconEnding);
     cardEL.classList.add("card");
+    cardEL.classList.add("bg-dark");
+    cardEL.classList.add("bg-gradient");
+    cardEL.classList.add("my-2");
     cardBodyEl.classList.add("card-body");
+    cardTitleContainer.classList.add("d-flex")
+    cardTitleContainer.classList.add("align-items-center")
     cardTitleEl.classList.add("card-title");
-    cardTextEl.classList.add("card-text");
+    cardTempEl.classList.add("card-text");
+    cardWindEl.classList.add("card-text");
+    cardHumidityEl.classList.add("card-text");
     forecastContainerEl.appendChild(cardEL);
     cardEL.appendChild(cardBodyEl);
     cardBodyEl.appendChild(cardTitleContainer);
     cardTitleContainer.appendChild(cardTitleEl)
-    cardBodyEl.appendChild(cardIcon)
-    cardBodyEl.appendChild(cardTextEl);
+    cardTitleContainer.appendChild(cardIcon)
+    cardBodyEl.appendChild(cardTempEl);
+    cardBodyEl.appendChild(cardWindEl);
+    cardBodyEl.appendChild(cardHumidityEl);
     cardTitleEl.textContent = formattedDate;
+    cardTempEl.textContent = ("Temp: " + day.temp.day)
+    cardWindEl.textContent = ("Wind: " + day.wind_speed)
+    cardHumidityEl.textContent = ("Humidity: " + day.humidity)
 };
 
 
