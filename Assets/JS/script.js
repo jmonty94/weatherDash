@@ -23,8 +23,8 @@ const currWindEl = $("#currWind");
 const currHumidityEl = $("#currHumidity");
 const currUVIndexEl = $("#currUVIndex");
 const uvValEl = $("#uvVal")
-// const forecastContainerEl = document.getElementById("forecastContainer")
-const forecastContainerEl = $("#forecastContainer")
+const forecastContainerEl = document.getElementById("forecastContainer")
+// const forecastContainerEl = $("#forecastContainer")
 
 // const fiveDayEl = document.getElementById("fiveDay")
 // navBar.append("<ul>Previous Searches</ul");
@@ -72,7 +72,6 @@ function getCityWeather(lat, lon, city, state){
         fiveDay.forEach(day =>  {
             generateForecastCard(day)
         })
-        // generateForecastCards(fiveDay)
     });
 };
 function generateCurrentWeather(city, state, currentTemp, currentWind, currentHumidity, currentUVI) {
@@ -92,7 +91,6 @@ function generateCurrentWeather(city, state, currentTemp, currentWind, currentHu
     }
 }
 function generateForecastCard(day){
-    // console.log(typeof fiveDay);
     // const cardEL = document.createElement("div")
     const cardEL = document.createElement("div")
     const cardHeadingEl = document.createElement("h1")
@@ -100,9 +98,7 @@ function generateForecastCard(day){
     forecastContainerEl.appendChild(cardEL)
     cardEL.appendChild(cardHeadingEl)
     formattedDate = day.dt
-    // cardHeadingEl.textContent = 
-    
-
+    cardHeadingEl.textContent = formattedDate
 }
 
 
