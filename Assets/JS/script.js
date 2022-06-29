@@ -97,8 +97,10 @@ function generateForecastCard(day){
     cardEL.classList.add("card")
     forecastContainerEl.appendChild(cardEL)
     cardEL.appendChild(cardHeadingEl)
-    formattedDate = day.dt
+    const formattedDate = moment.unix(day.dt).format("MM-DD-YYYY")
     cardHeadingEl.textContent = formattedDate
+
+
 }
 
 
