@@ -22,30 +22,22 @@ const currHumidityEl = $("#currHumidity");
 const currUVIndexEl = $("#currUVIndex");
 const uvValEl = $("#uvVal");
 const forecastContainerEl = document.getElementById("forecastContainer");
+const previousSearchesEl = document.getElementById("previousSearches") 
 
 function search() {
-    let city = searchInputEl.val();
+    const city = searchInputEl.val();
     searchInputEl.val("");
     if (city !== "") {
-        resultEl.removeClass("d-none");
         getLatLon(city);
-        
+        addToPreviousSearches(city);
     };
 };
-function getLatLon(city) {
-    let lat;
-    let lon;
-    fetch(geocodingURL + qTag + city + openWeatherAPIKey)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            lat = data[0].lat;
-            lon = data[0].lon;
-            city = data[0].name;
-            state = data[0].state;
-            getCityWeather(lat, lon, city, state);
-        });
+async function getLatLon(city) {
+    const response = await fetch(geocodingURL + qTag + city + openWeatherAPIKey).catch(error => console.error(error));
+    const geoCodingResult = await response.json().catch(error => console.error(error));
+    const { lat, lon, state, name } = geoCodingResult?.[0];
+    resultEl.removeClass("d-none");
+    getCityWeather(lat, lon, name, state);
 };
 function getCityWeather(lat, lon, city, state) {
     fetch(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag)
@@ -53,40 +45,41 @@ function getCityWeather(lat, lon, city, state) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
             fiveDay = data.daily.slice(1, 6);
-            console.log(fiveDay);
-
-            // console.log(forecastArray);
             currentDay = moment.unix(data.current.dt).format("MM-DD-YYYY");
             currentTemp = data.current.temp;
             currentWind = data.current.wind_speed;
             currentHumidity = data.current.humidity;
             currentUVI = data.current.uvi;
             generateCurrentWeather(city, state, currentDay, currentTemp, currentWind, currentHumidity, currentUVI);
+            removeChilds(forecastContainerEl)
             fiveDay.forEach(day => {
                 generateForecastCard(day);
             });
         });
 };
 function generateCurrentWeather(city, state, currentDay, currentTemp, currentWind, currentHumidity, currentUVI) {
-    currentSearchEl.text(city + ", " + state + " " + currentDay );
+    currentSearchEl.text(city + ", " + state + " " + currentDay);
     currTempEl.text("Temp: " + currentTemp);
     currWindEl.text("Wind: " + currentWind);
     currHumidityEl.text("Humidity: " + currentHumidity);
-    uvValEl.before("UV Index: ");
-    uvValEl.text(currentUVI);
+    const uvVal = document.createElement("span")
+    uvVal.textContent = currentUVI
+    currUVIndexEl.empty()
+    // uvValEl.before("UV Index: ");
+    // uvValEl.text(currentUVI);
     if (currentUVI <= 2) {
-        uvValEl.addClass("bg-success");
+        uvVal.setAttribute("class", "bg-success");
     } else if (currentUVI > 2 && currentUVI <= 7) {
-        uvValEl.addClass("bg-warning");
+        uvVal.setAttribute("class", "bg-warning");
     } else if (currentUVI > 7) {
-        uvValEl.addClass("bg-danger");
-    };
-};
+        uvVal.setAttribute("class", "bg-danger");
+    }
+    uvVal.classList.add("px-5", "rounded-3")
+    currUVIndexEl.text("UV Index: ")
+    currUVIndexEl.append(uvVal)
+}
 function generateForecastCard(day) {
-    // const cardEL = document.createElement("div")
-    console.log(day.weather[0].icon);
     const cardEL = document.createElement("div");
     const cardBodyEl = document.createElement("div");
     const cardTitleContainer = document.createElement("div")
@@ -97,17 +90,10 @@ function generateForecastCard(day) {
     const cardIcon = document.createElement("img");
     const formattedDate = moment.unix(day.dt).format("MM-DD-YYYY");
     cardIcon.src = (iconUrl + day.weather[0].icon + iconEnding);
-    cardEL.classList.add("card");
-    cardEL.classList.add("bg-dark");
-    cardEL.classList.add("bg-gradient");
-    cardEL.classList.add("my-2");
+    cardEL.classList.add("card", "bg-dark", "bg-gradient", "my-2");
     cardBodyEl.classList.add("card-body");
-    cardTitleContainer.classList.add("d-flex")
-    cardTitleContainer.classList.add("align-items-center")
+    cardTitleContainer.classList.add("d-flex", "align-items-center")
     cardTitleEl.classList.add("card-title");
-    cardTempEl.classList.add("card-text");
-    cardWindEl.classList.add("card-text");
-    cardHumidityEl.classList.add("card-text");
     forecastContainerEl.appendChild(cardEL);
     cardEL.appendChild(cardBodyEl);
     cardBodyEl.appendChild(cardTitleContainer);
@@ -121,6 +107,43 @@ function generateForecastCard(day) {
     cardWindEl.textContent = ("Wind: " + day.wind_speed)
     cardHumidityEl.textContent = ("Humidity: " + day.humidity)
 };
-
-
+function addToPreviousSearches(city) {
+    const previousSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
+    const newSearch = toTitleCase(city);
+    if (previousSearches.indexOf(newSearch) === -1) {
+        previousSearchesLimit(previousSearches)
+        previousSearches.unshift(newSearch)
+    }
+    localStorage.setItem("previousSearches", JSON.stringify(previousSearches))
+    createButtons()
+}
+function toTitleCase(city) {
+    const lowerCasedCity = city.trim().toLowerCase();
+    return lowerCasedCity.split(' ').map(lowerCasedCity => lowerCasedCity.charAt(0).toUpperCase() + lowerCasedCity.slice(1)).join(' ')
+}
+function removeChilds (container) {
+    while (container.lastChild) {
+        container.removeChild(container.lastChild);
+    }
+};
+function createButtons () {
+    removeChilds(previousSearchesEl)
+    const previousSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
+    previousSearches.forEach(city => {
+        buttonContents(city)
+    });
+}
+function buttonContents(city) {
+    const btn = document.createElement("button")
+        btn.textContent = city
+        btn.classList.add("btn", "btn-info", "btn-rounded", "m-1")
+        btn.addEventListener("click", (event) => {getLatLon(event.target.textContent);} )
+        previousSearchesEl.appendChild(btn)
+}
+function previousSearchesLimit(previousSearches) {
+    if (previousSearches.length === 5) {
+        previousSearches.pop()
+    }
+}
+createButtons()
 searchBtn.on("click", search) 

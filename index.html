@@ -14,12 +14,11 @@
     <link href="Assets/CSS/style.css" rel="stylesheet">
     <title>Monty's Weather Dash</title>
 </head>
-
-<body>
+<body class="bg-light bg-gradient">
     <header class="text-center">
         <h1>Weather Dashboard</h1>
     </header>
-    <main class="d-flex container justify-content-center px-0">
+    <main class="container justify-content-center px-0">
         <div class="row justify-content-center">
             <nav class="col-11">
                 <h2 class="text-center">Search for a City</h2>
@@ -32,14 +31,16 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <div id="previousSearches" class="py-2">
+                </div>
             </nav>
-            <div class="col-11 d-block m-4">
+            <div class="col-11 d-block">
                 <article class="border border-black d-none justify-content-center rounded-5" id="resultContainer">
                     <h2 id="currentSearch" class="fw-bold text-dark"></h2>
                     <h3 id="currTemp"></h3>
                     <h3 id="currWind"></h3>
                     <h3 id="currHumidity"></h3>
-                    <h3 id="currUVIndex"><span id="uvVal" class="px-5 rounded-3"></span></h3>
+                    <h3 id="currUVIndex"></h3>
                 </article>
                 <section id="forecastContainer" class="col-12 my-4 justify-content-between text-light">
                 </section>
@@ -55,17 +56,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <!-- my js -->
 <script src="Assets/JS/script.js"></script>
-
 </html>
-
-
-
-
-
-<!-- <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
-</div> -->
