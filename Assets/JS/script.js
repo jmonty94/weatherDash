@@ -1,8 +1,8 @@
 // openWeather Variables
 const oneCallURL = 'https://api.openweathermap.org/data/3.0/onecall';
-const geocodingURL = 'http://api.openweathermap.org/geo/1.0/direct';
+const geocodingURL = 'https://api.openweathermap.org/geo/1.0/direct';
 const openWeatherAPIKey = `&appid=61eaae33c7b186d0a805e57d11aff3bb`;
-const iconUrl = `http://openweathermap.org/img/wn/`;
+const iconUrl = `https://openweathermap.org/img/wn/`;
 const iconEnding = `@2x.png`;
 const latTag = `?lat=`;
 const lonTag = `&lon=`;
