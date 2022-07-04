@@ -90,7 +90,7 @@ function generateForecastCard(day) {
     const cardIcon = document.createElement("img");
     const formattedDate = moment.unix(day.dt).format("MM-DD-YYYY");
     cardIcon.src = (iconUrl + day.weather[0].icon + iconEnding);
-    cardEL.classList.add("card", "bg-dark", "bg-gradient", "my-2");
+    cardEL.classList.add("bg-dark", "bg-gradient", "card", "col-xl-2", "col-md-3", "d-md-inline-block", "m-2");
     cardBodyEl.classList.add("card-body");
     cardTitleContainer.classList.add("d-flex", "align-items-center")
     cardTitleEl.classList.add("card-title");
