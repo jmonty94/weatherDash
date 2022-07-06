@@ -23,7 +23,7 @@ const currUVIndexEl = $("#currUVIndex");
 const uvValEl = $("#uvVal");
 const forecastContainerEl = document.getElementById("forecastContainer");
 const previousSearchesEl = document.getElementById("previousSearches") 
-
+// initial search
 function search() {
     const city = searchInputEl.val();
     searchInputEl.val("");
@@ -32,6 +32,7 @@ function search() {
         addToPreviousSearches(city);
     };
 };
+// async function that gets the lat and lon of the searched city
 async function getLatLon(city) {
     const response = await fetch(geocodingURL + qTag + city + openWeatherAPIKey).catch(error => console.error(error));
     const geoCodingResult = await response.json().catch(error => console.error(error));
@@ -39,6 +40,7 @@ async function getLatLon(city) {
     resultEl.removeClass("d-none");
     getCityWeather(lat, lon, name, state);
 };
+// takes the lat and long and grabs that locations weather data
 function getCityWeather(lat, lon, city, state) {
     fetch(oneCallURL + latTag + lat + lonTag + lon + openWeatherAPIKey + unitTag)
         .then(function (response) {
@@ -58,6 +60,7 @@ function getCityWeather(lat, lon, city, state) {
             });
         });
 };
+// generates that citys current weather data and displays it on the page
 function generateCurrentWeather(city, state, currentDay, currentTemp, currentWind, currentHumidity, currentUVI) {
     currentSearchEl.text(city + ", " + state + " " + currentDay);
     currTempEl.text("Temp: " + currentTemp);
@@ -66,8 +69,6 @@ function generateCurrentWeather(city, state, currentDay, currentTemp, currentWin
     const uvVal = document.createElement("span")
     uvVal.textContent = currentUVI
     currUVIndexEl.empty()
-    // uvValEl.before("UV Index: ");
-    // uvValEl.text(currentUVI);
     if (currentUVI <= 2) {
         uvVal.setAttribute("class", "bg-success");
     } else if (currentUVI > 2 && currentUVI <= 7) {
@@ -79,6 +80,7 @@ function generateCurrentWeather(city, state, currentDay, currentTemp, currentWin
     currUVIndexEl.text("UV Index: ")
     currUVIndexEl.append(uvVal)
 }
+// creates the forecasted cards and displays the corresponding data
 function generateForecastCard(day) {
     const cardEL = document.createElement("div");
     const cardBodyEl = document.createElement("div");
@@ -107,6 +109,7 @@ function generateForecastCard(day) {
     cardWindEl.textContent = ("Wind: " + day.wind_speed)
     cardHumidityEl.textContent = ("Humidity: " + day.humidity)
 };
+// adds the search to the list of previous searches
 function addToPreviousSearches(city) {
     const previousSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
     const newSearch = toTitleCase(city);
@@ -117,15 +120,18 @@ function addToPreviousSearches(city) {
     localStorage.setItem("previousSearches", JSON.stringify(previousSearches))
     createButtons()
 }
+// takes the search and formats it to title cased
 function toTitleCase(city) {
     const lowerCasedCity = city.trim().toLowerCase();
     return lowerCasedCity.split(' ').map(lowerCasedCity => lowerCasedCity.charAt(0).toUpperCase() + lowerCasedCity.slice(1)).join(' ')
 }
+// remove children function to empty a container
 function removeChilds (container) {
     while (container.lastChild) {
         container.removeChild(container.lastChild);
     }
 };
+// creates the buttons that correspond to the previous searches 
 function createButtons () {
     removeChilds(previousSearchesEl)
     const previousSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
@@ -133,6 +139,7 @@ function createButtons () {
         buttonContents(city)
     });
 }
+// function to create the buttons for the previous searches
 function buttonContents(city) {
     const btn = document.createElement("button")
         btn.textContent = city
@@ -140,10 +147,12 @@ function buttonContents(city) {
         btn.addEventListener("click", (event) => {getLatLon(event.target.textContent);} )
         previousSearchesEl.appendChild(btn)
 }
+// sets a limit on the number of previous searches that will be displayed
 function previousSearchesLimit(previousSearches) {
     if (previousSearches.length === 5) {
         previousSearches.pop()
     }
 }
+// runs the functions when the page loads
 createButtons()
 searchBtn.on("click", search) 
